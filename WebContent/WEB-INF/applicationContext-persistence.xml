@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.2.xsd 
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+	<!-- Database Configuration -->
+	<bean id="loggingDataSource" class="com.tpon.dsproxy.support.ProxyDataSource">
+		<property name="dataSource" ref="myDataSource" />
+		<property name="listener" ref="listeners" />
+	</bean>
+
+	<bean id="listeners" class="com.tpon.dsproxy.listener.ChainListener">
+		<property name="listeners">
+			<list>
+				<bean class="com.tpon.dsproxy.listener.CommonsQueryLoggingListener">
+					<property name="logLevel" value="INFO" />
+				</bean>
+				<bean class="com.tpon.dsproxy.listener.DataSourceQueryCountListener" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="minPoolSize" value="${jdbc.c3p0.min_size}" />
+		<property name="maxPoolSize" value="${jdbc.c3p0.max_size}" />
+		<property name="checkoutTimeout" value="${jdbc.c3p0.timeout}" />
+		<property name="maxIdleTimeExcessConnections" value="${jdbc.c3p0.max_idle_time_excess_conns}" />
+		<property name="automaticTestTable" value="${jdbc.c3p0.automatic_test_table}" />
+		<property name="idleConnectionTestPeriod" value="${jdbc.c3p0.idle_connection_test_period}" />
+	</bean>
+	
+	<!--to set up the serverDataSource, there's a couple of changes to make.
+	<bean id="loggingServerDataSource" class="com.tpon.dsproxy.support.ProxyDataSource">
+		<property name="serverDataSource" ref="serverDataSource" />
+		<property name="listener" ref="listeners" />
+	</bean>
+	<bean id="serverDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="jdbc/pvDS"/>
+		<property name="resourceRef" value="true" />
+	</bean>
+	
+	
+	1. Register the datasource with the server's JNDI registry.  
+	   Edit the [tomcat_home]/conf/server.xml, and add this to the <GlobalNamingResources> section
+	    <Resource
+      name="jdbc/pvDS"
+      type="javax.sql.DataSource"
+      maxActive="4"
+      maxIdle="2"
+      username="CHANGEME"
+      maxWait="5000"
+      validationQuery="select 1 from dual"        
+      driverClassName="oracle.jdbc.driver.OracleDriver"
+      password="CHANGEME"    
+      url="jdbc:oracle:thin:@//[HOST]:[PORT]/[SID]"/> 
+      
+	2. Link this resource with the app, by editing the context file.
+	   After deployment, this file is located in [tomcat_home]/conf/Catalina/localhost/[app_name.xml]
+	   
+	   <?xml version="1.0" encoding="UTF-8"?>
+		<Context path="/myApp" allowLinking="true">
+			 <ResourceLink name="jdbc/pvDS" global="jdbc/pvDS" type="javax.sql.DataSource" />
+		</Context>
+		
+	3. Edit the msiproject.properties file to use data.source=serverDataSource or logginServerDataSource
+	 -->
+
+	<bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+		<property name="dataSource" ref="${data.source}" />
+		<property name="changeLog" value="classpath:db/changelog.xml" />
+	</bean>
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="${data.source}" />
+		
+		<property name="hibernateProperties">
+			<value>
+				hibernate.jdbc.use_get_generated_keys=true
+			
+				hibernate.dialect=${jdbc.dialect}
+				hibernate.cache.use_query_cache=true
+				hibernate.cache.use_second_level_cache=true
+				hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
+				hibernate.generate_statistics false
+				hibernate.cache.use_structured_entries true
+			</value>
+		</property>
+		
+		<property name="annotatedClasses">
+			<list>
+				<value>ca.app.model.user.ActivityLog</value>
+				<value>ca.app.model.common.Address</value>
+				<value>ca.app.model.application.Application</value>
+				<value>ca.app.model.application.ApplicationPackage</value>
+				<value>ca.app.model.application.PackagePrice</value>
+				<value>ca.app.model.listing.BusinessDetails</value>
+				<value>ca.app.model.category.Category</value>
+				<value>ca.app.model.i18n.GlobalLocale</value>
+				<value>ca.app.model.listing.Listing</value>
+				<value>ca.app.model.common.ListingLead</value>
+				<value>ca.app.model.i18n.ListingLocale</value>
+				<value>ca.app.model.notification.NotificationLog</value>
+				<value>ca.app.model.usage.PageHit</value>
+				<value>ca.app.model.user.Password</value>
+				<value>ca.app.model.photo.Photo</value>
+				<value>ca.app.model.user.Role</value>
+				<value>ca.app.model.category.SubCategory</value>
+				<value>ca.app.model.user.User</value>
+				<value>ca.app.model.user.UserAgreement</value>
+				<value>ca.app.model.user.UserListingRole</value>
+				<value>ca.app.model.user.UserListingRolePK</value>
+				<value>ca.app.model.common.HashToken</value>
+				<value>ca.app.model.listing.EnquiryMap</value>
+				<value>ca.app.model.listing.EnquiryPost</value>
+				<value>ca.app.model.listing.ListingPackage</value>
+				<value>ca.app.model.application.ProviderPackageLink</value>
+				<value>ca.app.model.listing.Purchase</value>
+				<value>ca.app.model.listing.MetaDataApproval</value>
+				<value>ca.app.model.common.SupportIssue</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="hibernateConfiguration" factory-bean="&amp;sessionFactory" factory-method="getConfiguration" />
+
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" read-only="true" />
+			<tx:method name="*" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="serviceOperation" expression="execution(* ca.app.service..*.*Impl.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />
+	</aop:config>
+</beans>

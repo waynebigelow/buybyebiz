@@ -1,0 +1,162 @@
+<beans 
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<context:component-scan base-package="ca.app"/>
+	<mvc:annotation-driven/>
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:application.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="beanNameUrlHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+	<bean id="controllerHandlerAdapter" class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+	
+	<bean name="/robots.txt" class="ca.app.service.corporate.LoadRobotsDotTextController" />
+	<bean name="/home.html" class="ca.app.service.corporate.LoadHomeController" />
+	<bean name="/listIt.html" class="ca.app.service.corporate.LoadListItController" />
+	<bean name="/faq.html" class="ca.app.service.corporate.LoadFAQController" />
+	<bean name="/contact.html" class="ca.app.service.corporate.LoadContactController" />
+	<bean name="/tou.html" class="ca.app.service.corporate.LoadTermsOfUseController" />
+	<bean name="/pp.html" class="ca.app.service.corporate.LoadPrivacyPolicyController" />
+	<bean name="/optOut.html" class="ca.app.service.corporate.LoadOptOutController" />
+	<bean name="/optOut.do" class="ca.app.service.corporate.SaveOptOutController" />
+	<bean name="/sendIssue.do" class="ca.app.service.common.SendSupportIssueController" />
+	
+	<bean name="/listingAdmin/*.json" class="ca.app.service.common.CommonInfoController">
+		<property name="methodNameResolver">
+			<bean class="org.springframework.web.servlet.mvc.multiaction.InternalPathMethodNameResolver" />
+		</property>
+	</bean>
+
+	<bean name="/common/*.json" class="ca.app.service.common.CommonInfoController">
+		<property name="methodNameResolver">
+			<bean class="org.springframework.web.servlet.mvc.multiaction.InternalPathMethodNameResolver" />
+		</property>
+	</bean>
+
+	<!-- Super Admin Actions -->
+	<bean name="/appAdmin/users.html" class="ca.app.service.admin.LoadAdminController" />
+	<bean name="/appAdmin/loadUserListings.do" class="ca.app.service.admin.LoadUserListingsController" />
+	<bean name="/appAdmin/deleteUser.do" class="ca.app.service.user.DeleteUserController" />
+	<bean name="/appAdmin/toggleUser.do" class="ca.app.service.user.ToggleUserController" />
+	
+	<!-- Listing specific controllers -->
+	<bean name="/appAdmin/listings.html" class="ca.app.service.admin.LoadListingsController" />
+	<bean name="/appAdmin/toggleListing.do" class="ca.app.service.listing.ToggleListingController" />
+	<bean name="/appAdmin/savePayment.do" class="ca.app.service.admin.SavePaymentController" />
+	
+	<!-- Application specific controllers -->
+	<bean name="/appAdmin/applications.html" class="ca.app.service.application.LoadApplicationController" />
+	<bean name="/appAdmin/saveApplication.do" class="ca.app.service.application.SaveApplicationController" />
+	<bean name="/appAdmin/editApplication.do" class="ca.app.service.application.EditApplicationController" />
+	<bean name="/appAdmin/deleteApplication.do" class="ca.app.service.application.DeleteApplicationController" />
+	<bean name="/appAdmin/toggleApplication.do" class="ca.app.service.application.ToggleApplicationController" />
+	
+	<!-- Application package specific controllers -->
+	<bean name="/appAdmin/packages.html" class="ca.app.service.applicationPackage.LoadAppPackageController" />
+	<bean name="/appAdmin/savePackage.do" class="ca.app.service.applicationPackage.SaveAppPackageController" />
+	<bean name="/appAdmin/editPackage.do" class="ca.app.service.applicationPackage.EditAppPackageController" />
+	<bean name="/appAdmin/deletePackage.do" class="ca.app.service.applicationPackage.DeleteAppPackageController" />
+	<bean name="/appAdmin/togglePackage.do" class="ca.app.service.applicationPackage.ToggleAppPackageController" />
+	
+	<bean name="/appAdmin/listingLeads.html" class="ca.app.service.leads.LoadListingLeadsController" />
+	<bean name="/appAdmin/saveLead.do" class="ca.app.service.leads.SaveListingLeadController" />
+	<bean name="/appAdmin/editLead.do" class="ca.app.service.leads.EditListingLeadController" />
+	<bean name="/appAdmin/deleteLead.do" class="ca.app.service.leads.DeleteListingLeadController" />
+	
+	<bean name="/appAdmin/notificationLog.html" class="ca.app.service.notificationLog.LoadNotificationLogController">
+		<property name="type" value="page" />
+	</bean>
+	<bean name="/appAdmin/notificationLog.do" class="ca.app.service.notificationLog.LoadNotificationLogController">
+		<property name="type" value="modal" />
+	</bean>
+	<bean name="/appAdmin/deleteNotificationLog.do" class="ca.app.service.notificationLog.DeleteNotificationLogController" />
+	<bean name="/appAdmin/sendEmail.do" class="ca.app.service.mail.SendMailController" />
+	<bean name="/appAdmin/sendTestEmail.do" class="ca.app.service.mail.SendMailController" />
+		
+	<bean name="/appAdmin/activityLog.html" class="ca.app.service.activityLog.LoadActivityLogPageController" />
+	<bean name="/appAdmin/activityLog.do" class="ca.app.service.activityLog.LoadActivityLogJSONController" />
+	
+	<bean name="/appAdmin/pageHits.html" class="ca.app.service.admin.LoadPageHitsController" />
+	
+	<bean name="/appAdmin/categories.html" class="ca.app.service.category.LoadCategoryController" />
+	<bean name="/appAdmin/loadSubCategory.do" class="ca.app.service.category.LoadSubCategoryController" />
+	<bean name="/appAdmin/editCategory.do" class="ca.app.service.category.EditCategoryController" />
+	<bean name="/appAdmin/saveCategory.do" class="ca.app.service.category.SaveCategoryController" />
+	<bean name="/appAdmin/deleteCategory.do" class="ca.app.service.category.DeleteCategoryController" />
+	
+	<bean name="/appAdmin/metaDataApprovals.do" class="ca.app.service.admin.LoadMetaDataApprovalsController" />
+	<bean name="/appAdmin/photoApprovals.do" class="ca.app.service.admin.LoadPhotoApprovalsController" />
+	<bean name="/appAdmin/saveApprovals.do" class="ca.app.service.admin.SaveApprovalsController" />
+	<bean name="/appAdmin/saveListingStatus.do" class="ca.app.service.admin.SaveListingStatusController" />
+	
+	<bean name="/appAdmin/settings.html" class="ca.app.service.admin.LoadSettingsController" />
+	<bean name="/appAdmin/action.do" class="ca.app.service.admin.SettingsActionController"/>
+	
+	<!-- Account Owner Actions -->
+	<bean name="/userAdmin/admin.html" class="ca.app.service.user.LoadUserAdminController" />
+	<bean name="/userAdmin/inbox.html" class="ca.app.service.user.LoadInboxController" />
+	<bean name="/userAdmin/activityLog.html" class="ca.app.service.activityLog.LoadActivityLogPageController" />
+	<bean name="/user/saveUser.do" class="ca.app.service.user.SaveUserController" />
+	<bean name="/user/editUser.do" class="ca.app.service.user.EditUserController">
+		<property name="editType" value="json" />
+	</bean>
+	<bean name="/userAdmin/editUser.html" class="ca.app.service.user.EditUserController">
+		<property name="editType" value="mav" />
+	</bean>
+
+	<!-- Listing Owner Actions -->
+	<bean name="/listingAdmin/deleteListing.do" class="ca.app.service.listing.DeleteListingController"/>
+	<bean name="/listingAdmin/preview.html" class="ca.app.service.listing.LoadListingController" />
+	<bean name="/listingAdmin/saveBasic.do" class="ca.app.service.listing.SaveBasicDetailsController" />
+	<bean name="/listingAdmin/saveListingDetails.do" class="ca.app.service.listing.SaveListingDetailsController" />
+	<bean name="/listingAdmin/saveLocation.do" class="ca.app.service.listing.SaveLocationController" />
+	<bean name="/listingAdmin/saveBusinessDetails.do" class="ca.app.service.listing.SaveBusinessDetailsController" />
+	<bean name="/listingAdmin/saveAdvertising.do" class="ca.app.service.listing.SaveAdvertisingController" />
+	<bean name="/listingAdmin/saveMlsLinks.do" class="ca.app.service.listing.SaveMlsLinksController" />
+	<bean name="/listingAdmin/saveContactSettings.do" class="ca.app.service.listing.SaveContactController" />
+	<bean name="/listingAdmin/editPhoto.do" class="ca.app.service.photo.EditPhotoController" />
+	<bean name="/listingAdmin/savePhoto.do" class="ca.app.service.photo.SavePhotoController" />
+	<bean name="/listingAdmin/deletePhoto.do" class="ca.app.service.photo.DeletePhotoController" />
+	<bean name="/listingAdmin/loadInbox.do" class="ca.app.service.inbox.LoadInboxJSONController" />
+	<bean name="/listingAdmin/sendReply.do" class="ca.app.service.inbox.SendEnquiryReplyController" />
+	<bean name="/listingAdmin/markAsRead.do" class="ca.app.service.inbox.MarkAsReadController" />
+	<bean name="/listingAdmin/publishListing.do" class="ca.app.service.listing.PublishListingController" />
+	<bean name="/listingAdmin/loadPaymentDetails.do" class="ca.app.service.commerce.LoadPaymentDetailsController" />
+	<bean name="/listingAdmin/saveListingPackage.do" class="ca.app.service.commerce.SaveListingPackageController" />
+	<bean name="/listingAdmin/loadConfirmation.html" class="ca.app.service.commerce.LoadConfirmationController" />
+	<bean name="/listingAdmin/metaDataRejections.do" class="ca.app.service.listing.LoadMetaDataRejectionsController" />
+	<bean name="/listingAdmin/photoRejections.do" class="ca.app.service.listing.LoadPhotoRejectionsController" />
+	<bean name="/listingAdmin/changeStatus.do" class="ca.app.service.listing.SaveStatusController"/>
+	
+	<!-- User Actions -->
+	<bean name="/security/registration.do" class="ca.app.security.RegistrationController" />
+	<bean name="/security/completeRegistration.html" class="ca.app.security.CompleteRegistrationController" />
+	<bean name="/security/completePwdReset.html" class="ca.app.security.CompletePasswordResetController" />
+	<bean name="/security/logout.do" class="ca.app.security.LogoutController" />
+	<bean name="/security/changePwd.do" class="ca.app.security.ChangePasswordController" />
+	<bean name="/security/changeEmail.do" class="ca.app.security.ChangeEmailController" />
+	<bean name="/security/completeEmailChange.html" class="ca.app.security.CompleteEmailChangeController" />
+	<bean name="/security/forgotPwd.do" class="ca.app.security.ForgotPasswordController" />
+	<bean name="/security/denied.html" class="ca.app.service.user.LoadPageDeniedController" />
+	
+	<bean name="/sendEnquiry.do" class="ca.app.service.search.SendListingEnquiryController" />
+	<bean name="/search.html" class="ca.app.service.search.LoadSearchController" />
+	<bean name="/*/*/*/*.html" class="ca.app.service.search.LoadSiteController" />
+	<bean name="/*.html" class="ca.app.service.search.LoadSiteController" />
+</beans>

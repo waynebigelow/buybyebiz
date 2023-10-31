@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+<changeSet id="Install: schema" author="wayne">
+	<comment>Install: schema</comment>
+	<sql>
+		create table global_locale (
+			code varchar(10) not null,
+			primary key (code)
+		);
+		
+		create table application (
+			application_id numeric(10,0) not null,
+			type_id numeric(10,0),
+			name varchar(256),
+			description varchar(1000),
+			key varchar(30),
+			domain varchar(256),
+			reply_email varchar(256),
+			support_email varchar(256),
+			support_phone varchar(256),
+			default_locale varchar(10),
+			enabled boolean,
+			primary key (application_id)
+		);
+		create sequence seq_application start 1;
+		
+		create table application_package (
+			package_id numeric(10,0) not null,
+			name varchar(256),
+			description varchar(1000),
+			application_id numeric(10,0),
+			type_id numeric(10,0),
+			time_period_id numeric(10,0),
+			duration numeric(10,0),
+			enabled boolean,
+			agent_discount numeric(10,2),
+			link_id numeric(10,0),
+			primary key (package_id)
+		);
+		create sequence seq_app_package start 1;
+		
+		create table package_price (
+			package_price_id numeric(10,0) not null,
+			package_id numeric(10,0),
+			price numeric(19,2),
+			tax numeric(10,2),
+			currency_type_id numeric(10,0),
+			primary key (package_price_id)
+		);
+		create sequence seq_package_price start 1;
+		
+		create table provider_package_link (
+			link_id numeric(10,0) not null,
+			provider_id numeric(10,0),
+			link_value varchar(256),
+			primary key (link_id)
+		);
+		create sequence seq_provider_package_link start 1;
+		
+		create table address (
+			address_id numeric(10,0) not null,
+			type_id numeric(10,0),
+			address1 varchar(256),
+			address2 varchar(256),
+			city varchar(256),
+			province varchar(256),
+			country varchar(256),
+			postal_code varchar(12),
+			primary key (address_id)
+		);
+		create sequence seq_address start 1;
+
+		create table roles (
+			role_id numeric(10,0) not null,
+			role_name varchar(256),
+			primary key (role_id)
+		);
+		create sequence seq_roles start 1;
+		
+		create table user_listing_role (
+			user_listing_role_id numeric(10,0) not null,
+			user_id numeric(10,0),
+			listing_id numeric(10,0),
+			role_id numeric(10,0),
+			application_id numeric(10,0),
+			primary key (user_listing_role_id)
+		);
+		create sequence seq_user_listing_role start 1;
+		
+		create table user_agreement (
+			user_agreement_id numeric(10,0) not null,
+			user_id numeric(10,0),
+			application_id numeric(10,0),
+			listing_id numeric(10,0),
+			user_agreement_type_id numeric(10,0),
+			version numeric(10,0),
+			agreement_date timestamp,
+			primary key (user_agreement_id)
+		);
+		create sequence seq_user_agreement start 1;
+		
+		create table user_account (
+			user_id numeric(10,0) not null,
+			email varchar(256) unique,
+			password varchar(256),
+			firstname varchar(256),
+			lastname varchar(256),
+			telephone varchar(40),
+			fax varchar(40),
+			preferred_locale varchar(10),
+			enabled boolean,
+			status_id numeric(10,0),
+			last_login timestamp,
+			failed_logins numeric(10,0),
+			locked_out boolean,
+			disabled_reason varchar(256),
+			last_password_change timestamp,
+			ignore_password_rules boolean,
+			enable_promotional_email boolean,
+			enable_expiration_email boolean,
+			enable_enquiry_email boolean,
+			is_agent boolean,
+			company_name varchar(256),
+			primary key (user_id)
+		);
+		create sequence seq_user_account start 1;
+
+		create table meta_data_approval (
+			meta_data_id numeric(10,0) not null,
+			listing_id numeric(10,0),
+			status_id numeric(10,0),
+			type_id numeric(10,0),
+			value varchar(2000),
+			submit_date timestamp,
+			reason varchar(500),
+			rejected_date timestamp,
+			primary key (meta_data_id)
+		);
+		create sequence seq_meta_data_approval start 1;
+
+		create table listing (
+			listing_id numeric(10,0) not null,
+			application_id numeric(10,0),
+			user_id numeric(10,0),
+			category_id numeric(10,0),
+			sub_category_id numeric(10,0),
+			title varchar(256),
+			description varchar(2000),
+			listing_uri varchar(256),
+			price numeric(19,2),
+			currency_type_id numeric(10,0),
+			address_id numeric(10,0),
+			details_id numeric(10,0),
+			enabled boolean,
+			status_id numeric(10,0),
+			include_contact_name boolean,
+			include_contact_telephone boolean,
+			expiration_date timestamp,
+			primary key (listing_id)
+		);
+		create sequence seq_listing start 1;
+
+		create table business_details (
+			details_id numeric(10,0) not null,
+			website_url varchar(256),
+			facebook_url varchar(256),
+			twitter_url varchar(256),
+			tripadvisor_url varchar(256),
+			sales_rev_min numeric(19,2),
+			sales_rev_max numeric(19,2),
+			cash_flow numeric(19,2),
+			inventory_total numeric(19,2),
+			property_type_id numeric(10,0),
+			chattel_total numeric(19,2),
+			selling_reason varchar(256),
+			hours_operation varchar(256),
+			year_established varchar(256),
+			number_employees varchar(256),
+			frontage varchar(256),
+			square_footage varchar(256),
+			acreage varchar(256),
+			support varchar(256),
+			owner_financing varchar(256),
+			primary key (details_id)
+		);
+		create sequence seq_business_details start 1;
+		
+		create table listing_locale (
+			listing_locale_id numeric(10,0) not null,
+			listing_id numeric(10,0),
+			code varchar(10),
+			primary key (listing_locale_id)
+		);
+		create sequence seq_listing_locale start 1;
+		
+		create table photo (
+			photo_id numeric(10,0) not null,
+			listing_id numeric(10,0),
+			file_name varchar(256),
+			photo_type_id numeric(10,0),
+			caption varchar(256),
+			status_id numeric(10,0),
+			photo_size numeric(19,0),
+			height numeric(10,0),
+			width numeric(10,0),
+			reason varchar(500),
+			rejected_date timestamp,
+			primary key (photo_id)
+		);
+		create sequence seq_photo start 1;
+		
+		create table page_hit (
+			page_hit_id numeric(10,0) not null,
+			application_id numeric(10,0),
+			listing_id numeric(10,0),
+			user_id numeric(10,0),
+			session_id varchar(256),
+			page_hit_type_id numeric(10,0),
+			area_id numeric(10,0),
+			area_info varchar(256),
+			action_id numeric(10,0),
+			date_time timestamp,
+			time_spent numeric(10,0),
+			ip_address varchar(256),
+			referer varchar(2000),
+			referer_type_id numeric(10,0),
+			raw_user_agent varchar(256),
+			user_agent varchar(256),
+			user_agent_os varchar(256),
+			primary key (page_hit_id)
+		);
+		create sequence seq_page_hit start 1;
+		
+		create table password(
+			password_id numeric(10,0),
+			user_id numeric(10,0),
+			hash char(1000),
+			changed_date timestamp,
+			primary key (password_id)
+		);
+		create sequence seq_password start 1;
+		
+		create table notification_log (
+			notification_log_id numeric(10,0) not null,
+			addressee varchar(256),
+			sent_time timestamp,
+			subject varchar(256),
+			distribution_type_id numeric(10,0),
+			notification_type_id numeric(10,0),
+			user_id numeric(10,0),
+			listing_id numeric(10,0),
+			application_id numeric(10,0),
+			primary key (notification_log_id)
+		);
+		create sequence seq_notification_log start 1;
+		
+		create table category (
+			category_id numeric(10,0) not null,
+			type_id numeric(10,0),
+			name varchar(256),
+			i18n varchar(256),
+			primary key (category_id)
+		);
+		create sequence seq_category start 1;
+		
+		create table sub_category (
+			sub_category_id numeric(10,0) not null,
+			category_id numeric(10,0),
+			name varchar(256),
+			i18n varchar(256),
+			primary key (sub_category_id)
+		);
+		create sequence seq_sub_category start 1;
+		
+		create table activity_log (
+			activity_log_id numeric(10,0) not null,
+			user_id numeric(10,0),
+			primary_id numeric(10,0),
+			area_id numeric(10,0),
+			type_id numeric(10,0),
+			modify_id numeric(10,0),
+			activity_date timestamp,
+			primary key (activity_log_id)
+		);
+		create sequence seq_activity_log start 1;
+		
+		create table hash_token (
+			token_id numeric(10,0) not null,
+			user_id numeric(10,0),
+			type_id numeric(10,0),
+			hash varchar(1000),
+			created_date timestamp,
+			expired_date timestamp,
+			primary key (token_id)
+		);
+		create sequence seq_hashtoken start 1;
+		
+		create table enquiry_map (
+			enquiry_map_id numeric(10,0) not null,
+			listing_id numeric(10,0),
+			poster_id numeric(10,0),
+			primary key (enquiry_map_id)
+		);
+		create sequence seq_enquiry_map start 1;
+		
+		create table enquiry_post (
+			post_id numeric(10,0) not null,
+			enquiry_map_id numeric(10,0),
+			comment varchar(1000),
+			post_date timestamp,
+			author_id numeric(10,0),
+			ip_address varchar(50),
+			is_read boolean,
+			read_date timestamp,
+			primary key (post_id)
+		);
+		create sequence seq_enquiry_post start 1;
+		
+		create table listing_package (
+			listing_package_id numeric(10,0) not null,
+			listing_id numeric(10,0),
+			purchase_id numeric(10,0),
+			package_id numeric(10,0),
+			primary key (listing_package_id)
+		);
+		create sequence seq_listing_package start 1;
+		
+		create table purchase (
+			purchase_id numeric(10,0) not null,
+			purchaser_user_id numeric(10,0),
+			description varchar(1000),
+			price numeric(19,2),
+			tax numeric(10,2),
+			tax_province varchar(256),
+			discount numeric(10,2),
+			total numeric(19,2),
+			currency_type_id numeric(10,0),
+			purchase_date timestamp,
+			transaction_id varchar(256),
+			primary key (purchase_id)
+		);
+		create sequence seq_purchase start 1;
+		
+		create table support_issue (
+			issue_id numeric(10,0) not null,
+			application_id numeric(10,0),
+			user_id numeric(10,0),
+			firstname varchar(256),
+			lastname varchar(256),
+			email varchar(256),
+			summary varchar(256),
+			description varchar(1000),
+			post_date timestamp,
+			is_read boolean,
+			read_date timestamp,
+			primary key (issue_id)
+		);
+		create sequence seq_support_issue start 1;
+		
+		create table listing_lead (
+			listing_lead_id numeric(10,0) not null,
+			business_name varchar(256),
+			firstname varchar(256),
+			lastname varchar(256),
+			email varchar(256),
+			telephone varchar(40),
+			enable_promotional_email boolean,
+			primary key (listing_lead_id)
+		);
+		create sequence seq_listing_lead start 1;
+	</sql>
+</changeSet>
+</databaseChangeLog>

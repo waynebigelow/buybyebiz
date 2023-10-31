@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
+		http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider user-service-ref="myUserDetailService">
+			<security:password-encoder ref="passwordEncoder">
+				<security:salt-source user-property="username" />
+			</security:password-encoder>
+		</security:authentication-provider>
+		<security:authentication-provider user-service-ref="reauthUserDetailService" />
+		<!--<security:authentication-provider ref="rememberMeAuthenticationProvider" />-->
+	</security:authentication-manager>
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetClass"><value>org.springframework.security.core.context.SecurityContextHolder</value></property>
+		<property name="targetMethod"><value>setStrategyName</value></property>
+		<property name="arguments">
+			<list>
+				<value>MODE_INHERITABLETHREADLOCAL</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+		<constructor-arg value="256"/>
+	</bean>
+	
+	<bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+		<property name="userPropertyToUse" value="username" />
+	</bean>
+	
+	<bean id="myUserDetailService" class="ca.app.security.SecurityDaoImpl">
+		<property name="dataSource" ref="myDataSource" />
+		<property name="userService" ref="userService" />
+	</bean>
+	
+	<bean id="reauthUserDetailService" class="ca.app.security.ReauthSecurityDaoImpl">
+		<property name="dataSource" ref="myDataSource" />
+		<property name="userService" ref="userService" />
+	</bean>
+	
+	<security:global-method-security secured-annotations="enabled" />
+
+	<bean id="authenticationEntryPoint" class="ca.app.security.AppLoginUrlAuthenticationEntryPoint">
+		<property name="useForward" value="true" />
+		<property name="xmlHttpRequestUrl" value="/security/unautherized.json" />
+		<property name="loginFormUrl" value="/home.html?l=t" />
+	</bean>
+	
+	<bean id="authenticationFilter" class="ca.app.security.AppUsernamePasswordAuthenticationFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="authenticationSuccessHandler" ref="successHandler" />
+		<property name="authenticationFailureHandler" ref="failureHandler" />
+		<property name="filterProcessesUrl" value="/j_spring_security_check" />
+		<property name="allowSessionCreation" value="true" />
+		<property name="sessionAuthenticationStrategy" ref="sas" />
+		<!-- <property name="rememberMeServices" ref="tokenBasedRememberMeServices" /> -->
+	</bean>
+	
+	<bean id="successHandler" class="ca.app.security.AppAuthenticationSuccessHandler">
+		<!-- <property name="rememberMeServices" ref="tokenBasedRememberMeServices" /> -->
+	</bean>
+	
+	<bean id="failureHandler" class="ca.app.security.AppAuthenticationFailureHandler">
+		<!--property name="securityService" ref="securityService"/-->
+		<property name="defaultFailureUrl" value="/home.html?l=t" />
+		<property name="useForward" value="true" />
+	</bean>
+
+	<bean id="sas" class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy">
+		<property name="migrateSessionAttributes" value="false" />
+		<property name="retainedAttributes">
+			<list>
+				<value>org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!--
+	<bean id="rememberMeFilter" class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="rememberMeServices" ref="tokenBasedRememberMeServices" />
+	</bean>
+	
+	<bean id="tokenBasedRememberMeServices" class="ca.app.security.AppTokenBasedRememberMeServices">
+		<property name="userDetailsService" ref="myUserDetailService" />
+		<property name="key" value="${rememberme.cookie.key}" />
+		<property name="cookieDomain" value="${sso.cookie.domain}" />
+	</bean>
+	
+	<bean id="rememberMeAuthenticationProvider" class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+		<property name="key" value="${rememberme.cookie.key}" />
+	</bean>
+	-->
+	
+	<security:http path-type="regex"
+		auto-config="false" 
+		entry-point-ref="authenticationEntryPoint"
+		access-denied-page="/home.html"
+		access-decision-manager-ref="accessDecisionManager" >
+		
+		<security:custom-filter position="CHANNEL_FILTER" ref="channelProcessingFilter"/>
+		<security:custom-filter position="FORM_LOGIN_FILTER" ref="authenticationFilter" />
+		<!-- <security:custom-filter position="REMEMBER_ME_FILTER" ref="rememberMeFilter" /> -->
+
+		<security:intercept-url 
+			pattern="\A/appAdmin/.*\Z" 
+			access="ROLE_SUPER_ADMIN" />
+		<security:intercept-url 
+			pattern="\A/commonAdmin/.*\Z" 
+			access="ROLE_ACCOUNT_OWNER,ROLE_SUPER_ADMIN" />
+		<security:intercept-url 
+			pattern="\A/listingAdmin/.*\Z" 
+			access="ROLE_LISTING_OWNER,ROLE_SUPER_ADMIN" />
+		<security:intercept-url 
+			pattern="\A/userAdmin/.*\Z" 
+			access="ROLE_ACCOUNT_OWNER,ROLE_SUPER_ADMIN" />
+
+	</security:http>
+	
+	<bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+		<property name="allowIfAllAbstainDecisions" value="false" />
+		<property name="decisionVoters">
+			<list>
+				<bean class="ca.app.security.SiteContentAccessVoter" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="channelProcessingFilter" class="org.springframework.security.web.access.channel.ChannelProcessingFilter">
+		<property name="channelDecisionManager" ref="channelDecisionManager"/>
+		<property name="securityMetadataSource">
+			<security:filter-security-metadata-source path-type="ant">
+				<!-- If we want to go full SSL, uncomment the following line and then ditch the rest. -->
+				<security:intercept-url pattern="/**" access="REQUIRES_SECURE_CHANNEL" />
+			</security:filter-security-metadata-source>
+		</property>
+	</bean>
+
+	<bean id="channelDecisionManager" class="org.springframework.security.web.access.channel.ChannelDecisionManagerImpl">
+		<property name="channelProcessors">
+			<list>
+				<ref bean="secureProcessor"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="secureProcessor" class="org.springframework.security.web.access.channel.SecureChannelProcessor" />
+</beans>

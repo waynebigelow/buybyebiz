@@ -1,0 +1,62 @@
+h1, h2, h3, h4 {
+	font-family: "HelveticaNeueLight", Helvetica, sans-serif;
+}
+button {
+	font-family: "HelveticaNeueLight", Helvetica, sans-serif; 
+}
+.nav > li > a, .ribbonLink {
+	font-family: "HelveticaNeueLight", Helvetica, sans-serif;
+}
+body {
+	font-family: "HelveticaNeueLight", Helvetica, sans-serif;
+}
+label,
+.form-control {
+	color: #2b2b2b;
+}
+.navbar {
+	margin-bottom:0px;
+	border-radius:0px;
+}
+.navbar-default {
+	background-color:#e7eaed;
+	border:0px;
+}
+.navbar-toggle {
+	background-color:#ffffff;
+	margin-bottom:40px;
+}
+.navbar-collapse.app-micro-nav.collapse {
+	background-color:#ffffff;
+	padding-top:60px;
+	padding-left:15px;
+}
+.navbar-collapse.app-micro-nav.collapse.in {
+	background-color:#ffffff;
+	padding-top:0px;
+	padding-left:15px;
+}
+.placeholder-text {
+ 	color: #aaa;
+}
+.panel {
+	color: black;
+}
+.contentText {
+	font-family: "HelveticaNeueLight", Helvetica, sans-serif;
+}
+.btn-default {
+	background-color:#d3d3d3;
+}
+.panel-body-custom {
+	background-color:#f8f8f8;
+}
+.modal-header {
+	background-color:#f8f8f8;
+}
+.modal-footer {
+	background-color:#f8f8f8;
+}
+.modal-dialog {
+	margin-top:50px;
+}

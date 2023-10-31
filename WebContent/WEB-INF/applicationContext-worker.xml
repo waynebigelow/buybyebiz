@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+	<bean id="timerFactory" class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+		<property name="scheduledExecutorTasks">
+			<list>
+				<ref bean="scheduledTaskExecutor" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="scheduledTaskHandler" class="ca.app.worker.ScheduledTaskHandler">
+	</bean>
+	
+	<bean id="scheduledTaskExecutor" class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+		<property name="delay" value="${daily.worker.delay}" />
+		<property name="period" value="${daily.worker.period}" />
+		<property name="runnable" ref="scheduledTaskHandler" />
+	</bean>
+</beans>

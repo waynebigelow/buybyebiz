@@ -1,0 +1,41 @@
+/*
+ Custom text styles can be added here, but the intent is that we try to use h1 to h6 first.
+ So far, the rules seem to be as follows:
+
+ h1:
+ - The name of the deceased, as well as page titles (Guestbook, etc)
+
+ h2:
+ - Subtitle
+
+ h3: 
+ - author of an entry
+
+ h4:
+ - date that an entry was created
+
+The placeholder-text style is used by the jquery placeholder plugin that adds support for placeholder
+text for the older versions of IE
+*/
+.placeholder-text
+{
+	color: #aaa;
+}
+
+.panel
+{
+	color: $panelText;
+}
+.contentText
+{
+	font-family: $contentTextFont;
+}
+body
+{
+	font-family: $contentFont;
+}
+label,
+.form-control
+{
+	color: $formFontColor;
+}

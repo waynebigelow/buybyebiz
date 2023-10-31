@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+		http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+		
+	<display-name>BuyByeBiz</display-name>
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/log4j.properties</param-value>
+	</context-param>	
+	<context-param>
+		<param-name>log4jRefreshInterval</param-name>
+		<param-value>1000</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/applicationContext-system.xml
+			/WEB-INF/applicationContext-security.xml
+			/WEB-INF/applicationContext-persistence.xml
+			/WEB-INF/applicationContext-jobQueue.xml
+			/WEB-INF/applicationContext-i18n.xml
+			/WEB-INF/applicationContext-mail.xml
+			/WEB-INF/applicationContext-worker.xml
+			/WEB-INF/applicationContext.xml
+		</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>setCharacterEncodingFilter</filter-name>
+		<filter-class>ca.app.service.SetCharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>setCharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>XSSFilter</filter-name>
+		<filter-class>ca.app.service.XSSFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>XSSFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>applicationCheckFilter</filter-name>
+		<filter-class>ca.app.service.ApplicationCheckFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>applicationCheckFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>requestCheckFilter</filter-name>
+		<filter-class>ca.app.service.RequestCheckFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>requestCheckFilter</filter-name>
+		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.html</url-pattern>
+		<url-pattern>*.json</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>hibernateFilter</filter-name>
+		<filter-class>org.springframework.orm.hibernate5.support.OpenSessionInViewFilter</filter-class>
+		<init-param>
+			<param-name>singleSession</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>sessionFactoryBeanName</param-name>
+			<param-value>sessionFactory</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>hibernateFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>home.html</welcome-file>
+	</welcome-file-list>
+	
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>*.html</url-pattern>
+		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.json</url-pattern>
+		<url-pattern>/robots.txt</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>  
+		<servlet-name>spring-rest</servlet-name>  
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>  
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>spring-rest</servlet-name>
+		<url-pattern>/sitemap.xml</url-pattern>
+	</servlet-mapping>
+	
+	<error-page>
+		<error-code>500</error-code>
+		<location>/500.htm</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.htm</location>
+	</error-page>
+</web-app>

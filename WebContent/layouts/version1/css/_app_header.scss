@@ -1,0 +1,129 @@
+/* Handle vertical and horizontal sizing of the main navbar components in all states */
+.navbar {
+	margin-bottom: 0px;
+	border-radius: 0px;
+}
+.navbar-default {
+	border: 0px;
+}
+.navbar-toggle {
+	margin-bottom:60px;
+}
+.navbar-collapse.app-micro-nav.app-memorial-nav.collapse {
+	padding-top: 60px;
+	padding-left: 15px;
+}
+.navbar-collapse.app-micro-nav.app-memorial-nav.collapse.in {
+	padding-top: 0px;
+	padding-left: 15px;
+}
+
+/* Main navbar styles (common to XS and non-XS) */
+.app-navbar-main {
+	background-color: $primaryBackground;
+	.dropdown-menu {
+		border: 0px;
+	}
+}
+.navbar-default .navbar-nav {
+	>li.open {
+		>a, >a:hover, >a:focus {
+			background-color: $primaryBackground;
+			color: $tertiaryAccent;
+		}
+		>a.active, >a.active:hover, >a.active:focus {
+			background-color: $secondaryAccent;
+			color: $tertiaryAccent;
+		}
+	}
+	>li {
+		>a.active, >a.active:hover, >a.active:focus {
+			background-color: $secondaryAccent;
+			color: $navText;
+		}
+		>a {
+			background-color: $primaryBackground;
+			color: $navText;
+			&:hover, &:focus {
+				color: $tertiaryAccent;
+			}
+		}
+	}
+}
+
+/* Non-XS - dropdown menu styles for main nav */
+.navbar-default .navbar-nav .open .dropdown-menu {
+	background-color: $primaryBackground;
+	> li > a {
+		background-color: $primaryBackground;
+		color: $navText;
+		&:hover, &:focus {
+			color: $tertiaryAccent;
+		}
+	}
+}
+
+/* XS nav - dropdown menu styles */
+.navbar-default .collapse.in .navbar-nav .open .dropdown-menu {
+	background-color: $tertiaryAccent;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	> li > a {
+		background-color: $tertiaryAccent;
+		color: $secondaryAccent;
+		&:hover, &:focus {
+			color: $navText;
+		}
+	}
+}
+
+/* Ribbon Nav styles */
+.app-navbar-ribbon {
+	background-color: $secondaryAccent;
+	height: 36px;
+	min-height: 36px;
+	line-height: 20px;
+	font-size: 1.5em;
+	padding-right: 15px;
+	
+	.navbar-nav > li > .dropdown-menu {
+		margin-top: 2px;
+	}
+	
+	.dropdown-header {
+		color: $contentText;
+		text-transform: uppercase;
+	}
+}
+.app-navbar-ribbon .navbar-nav {
+	>li.open {
+		>a, >a:hover, >a:focus {
+			background-color: $secondaryAccent;
+			color: $tertiaryAccent;
+		}
+		>a.active, >a.active:hover, >a.active:focus {
+			background-color: $secondaryAccent;
+			color: $tertiaryAccent;
+		}
+	}
+	>li {
+		>a.active, >a.active:hover, >a.active:focus {
+			background-color: $secondaryAccent;
+			color: $navText;
+		}
+		>a {
+			background-color: $secondaryAccent;
+			color: $navText;
+			padding: 5px;
+			&:hover, &:focus {
+				color: $tertiaryAccent;
+			}
+		}
+	}
+}
+
+.loginLink {
+	font-size: 0.7em;
+	text-transform: uppercase;
+	margin-top: 3px;
+}

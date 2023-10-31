@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+		"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+		"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+		
+<tiles-definitions>
+	<definition name="version1:menu" template="/layouts/version1/common/menu.jsp" />
+	<definition name="version1:footer" template="/layouts/version1/common/footer.jsp" />
+
+	<!-- Common Layout -->
+	<definition name="version1:COMMON_LAYOUT" template="/layouts/version1/main.jsp" />
+	<!-- Admin Layout -->
+	<definition name="version1:ADMIN_LAYOUT" template="/layouts/version1/admin.jsp" />
+	
+	<!-- Website Content -->
+	<definition name="version1:/corporate/*" extends="version1:COMMON_LAYOUT">
+		<put-attribute name="content.page" value="/layouts/version1/corporate/{1}.jsp" />
+	</definition>
+	
+	<!-- Application Admin Content -->
+	<definition name="version1:/appAdmin/*" extends="version1:ADMIN_LAYOUT">
+		<put-attribute name="admin.content" value="/layouts/version1/appAdmin/{1}.jsp" />
+	</definition>
+	
+	<definition name="version1:/appAdmin/*/*" extends="version1:ADMIN_LAYOUT">
+		<put-attribute name="admin.content" value="/layouts/version1/appAdmin/{1}/{2}.jsp" />
+	</definition>
+	
+	<!-- User Admin Content -->
+	<definition name="version1:/userAdmin/*" extends="version1:ADMIN_LAYOUT">
+		<put-attribute name="admin.content" value="/layouts/version1/userAdmin/{1}.jsp" />
+	</definition>
+	
+	<!-- Business Preview Page -->
+	<definition name="version1:/listingAdmin/business/*" extends="version1:ADMIN_LAYOUT">
+		<put-attribute name="admin.content" value="/layouts/version1/listingAdmin/business/{1}.jsp" />
+	</definition>
+
+	<!-- Common Admin Content -->
+	<definition name="version1:/commonAdmin/*" extends="version1:ADMIN_LAYOUT">
+		<put-attribute name="admin.content" value="/layouts/version1/commonAdmin/{1}.jsp" />
+	</definition>
+
+	<!-- Listing Page -->
+	<definition name="version1:/listing/*" extends="version1:COMMON_LAYOUT">
+		<put-attribute name="content.page" value="/layouts/version1/listing/{1}.jsp" />
+	</definition>
+
+	<!-- Security -->
+	<definition name="version1:/security/denied" extends="version1:COMMON_LAYOUT">
+		<put-attribute name="content.page" value="/layouts/version1/security/denied.jsp" />
+	</definition>
+	
+	<definition name="version1:robots" template="robots.jsp" />
+	<definition name="version1:sitemap" template="sitemap.jsp" />
+</tiles-definitions>

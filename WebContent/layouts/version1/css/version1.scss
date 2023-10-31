@@ -1,0 +1,50 @@
+$primaryBackground: #e7e7e7;
+$secondaryAccent: #ffffff;
+
+$tertiaryAccent: #ffffff;
+$primaryFontColor: #d4ca8e;
+$secondaryFontColor: #c1c1c1;
+$borderColor: #ffffff;
+$bodyBackground: #ffffff;
+$contentText: #2b2b2b;
+$formFontColor : $contentText;
+$navText: #d4ca8e;
+$activeNavText: #c1c1c1;
+$btnText: #ffffff;
+$footerText: #ffffff;
+$panelText: #000;
+$panelShadeBackground: #666;
+$photoMatteColor: #ffffff;
+$photoMatteBorderColor: #666;
+
+/*new*/
+$primaryButtonColor:#157570;
+$defaultButtonColor:#157570;
+$flatButtonColor:#157570;
+$primaryButtonBorder:#a6c47c;
+$defaultButtonBorder:#a6c47c;
+$flatButtonBorder:#a6c47c;
+$primaryButtonText:#ffffff;
+$defaultButtonText:#ffffff;
+$flatButtonText:#ffffff;
+
+$headerFont: "HelveticaNeueLight", Helvetica, sans-serif;
+$buttonFont: "HelveticaNeueLight", Helvetica, sans-serif;
+$contentTextFont: "HelveticaNeueLight", Helvetica, sans-serif;
+$navFont: "HelveticaNeueLight", Helvetica, sans-serif;
+$contentTextFont: "HelveticaNeueLight", Helvetica, sans-serif;
+$contentFont: "HelveticaNeueLight", Helvetica, sans-serif;
+
+h1, h2, h3, h4 {
+	font-family: $headerFont;	
+}
+
+button {
+	font-family: $buttonFont;
+}
+
+.nav>li>a, .ribbonLink {
+	font-family: $navFont;
+}
+
+@import 'app';

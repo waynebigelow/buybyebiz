@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+	<bean id="messageSource" class="ca.app.i18n.CustomizableResourceBundleMessageSource">
+		<property name="basenames">
+			<array value-type="java.lang.String">
+				<value>WEB-INF/classes/messages</value>
+			</array>
+		</property>
+		<property name="fileEncodings" value="UTF-8" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+	<bean id="localeService" class="ca.app.service.i18n.LocaleServiceImpl">
+		<property name="globalLocaleDAO" ref="globalLocaleDAO" />
+		<property name="listingLocaleDAO" ref="listingLocaleDAO" />
+		<property name="userDAO" ref="userDAO" />
+	</bean>
+	<bean id="globalLocaleDAO" class="ca.app.persistence.i18n.GlobalLocaleDAOImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="listingLocaleDAO" class="ca.app.persistence.i18n.ListingLocaleDAOImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+</beans>

@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+<changeSet id="Install: default data" author="wayne">
+	<comment>Install: default data</comment>
+	<sql>
+		<!-- Global Locales -->
+		insert into global_locale (code) values ('ar_MA');
+		insert into global_locale (code) values ('el_GR');
+		insert into global_locale (code) values ('en_US');
+		insert into global_locale (code) values ('es_ES');
+		insert into global_locale (code) values ('fr_CA');
+		insert into global_locale (code) values ('it');
+		insert into global_locale (code) values ('zh_CN');
+		
+		insert into roles (role_id, role_name) values (1, 'USER');
+		insert into roles (role_id, role_name) values (10, 'ACCOUNT_OWNER');
+		insert into roles (role_id, role_name) values (20, 'LISTING_OWNER');
+		insert into roles (role_id, role_name) values (100, 'SUPER_ADMIN');
+		
+		<!-- Application -->
+		insert into application
+		(application_id, type_id, name, enabled, domain, key, reply_email, support_email, support_phone, default_locale, description)
+		values
+		(nextval('seq_application'), 10, 'BuyByeBiz', true, 'abc.permavita.com', 'abc', 'noreply@buybyebiz.com', 'support@buybyebiz.com', '1-888-966-0886', 'en_US', 'BuyByeBiz is a businesses for sale, marketing website. It offers sellers a free trial period to list and gives buyers the ability and simplicity to connect with them.');
+		
+		<!-- PayPal link to BBB Packaging -->
+		insert into provider_package_link
+		(link_id, provider_id, link_value)
+		values
+		(nextval('seq_provider_package_link'), 10, '1 Month');
+		
+		insert into provider_package_link
+		(link_id, provider_id, link_value)
+		values
+		(nextval('seq_provider_package_link'), 10, '3 Months');
+		
+		insert into provider_package_link
+		(link_id, provider_id, link_value)
+		values
+		(nextval('seq_provider_package_link'), 10, '6 Months');
+		
+		insert into provider_package_link
+		(link_id, provider_id, link_value)
+		values
+		(nextval('seq_provider_package_link'), 10, '1 Year');
+		
+		<!-- BBB Packaging -->
+		insert into application_package
+		(package_id, name, description, application_id, type_id, time_period_id, duration, enabled, link_id, agent_discount)
+		values
+		(nextval('seq_app_package'), 'Initial - Trial', '6 month free subscription.', 1, 1, 2, 6, true, 0, 0);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 1, 0, 0, 10);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 1, 0, 0, 20);
+		
+		insert into application_package
+		(package_id, name, application_id, type_id, time_period_id, duration, enabled, link_id, agent_discount)
+		values
+		(nextval('seq_app_package'), 'Extension - 1 Month', 1, 2, 2, 1, true, 1, 20);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 2, 20, 13, 10);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 2, 15, 0, 20);
+		
+		insert into application_package
+		(package_id, name, application_id, type_id, time_period_id, duration, enabled, link_id, agent_discount)
+		values
+		(nextval('seq_app_package'), 'Extension - 3 Months', 1, 2, 2, 3, true, 2, 20);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 3, 50, 13, 10);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 3, 40, 0, 20);
+		
+		insert into application_package
+		(package_id, name, application_id, type_id, time_period_id, duration, enabled, link_id, agent_discount)
+		values
+		(nextval('seq_app_package'), 'Extension - 6 Months', 1, 2, 2, 6, true, 3, 20);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 4, 90, 13, 10);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 4, 70, 0, 20);
+		
+		insert into application_package
+		(package_id, name, application_id, type_id, time_period_id, duration, enabled, link_id, agent_discount)
+		values
+		(nextval('seq_app_package'), 'Extension - 1 Year', 1, 2, 3, 1, true, 4, 20);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 5, 160, 13, 10);
+		
+		insert into package_price
+		(package_price_id, package_id, price, tax, currency_type_id)
+		values
+		(nextval('seq_package_price'), 5, 130, 0, 20);
+		
+		<!-- System Admin User -->
+		insert into user_account
+		(user_id, email, password, firstname, lastname, enabled, status_id, failed_logins, locked_out, ignore_password_rules, preferred_locale, telephone, enable_promotional_email, enable_expiration_email, enable_enquiry_email, is_agent)
+		values
+		(nextval('seq_user_account'), 'wbigelow@buybyebiz.com', 'bbfc7639f0b89ee6b816f922aa73f58930b6a5c78793367b92ab0b7b6193f2c6', 'Wayne', 'Bigelow', true, 0, 0, false, true, 'en_US', '(888)966-0886', false, false, false, false);
+		
+		insert into user_agreement 
+		(user_agreement_id, user_id, application_id, listing_id, user_agreement_type_id, version, agreement_date) 
+		values 
+		(nextval('seq_user_agreement'), 1, 1, 0, 1, 1, (select current_timestamp));
+		insert into user_agreement 
+		(user_agreement_id, user_id, application_id, listing_id, user_agreement_type_id, version, agreement_date) 
+		values 
+		(nextval('seq_user_agreement'), 1, 1, 0, 2, 1, (select current_timestamp));
+		
+		insert into user_listing_role (user_listing_role_id, user_id, listing_id, role_id, application_id) values (nextval('seq_user_listing_role'), 1, 0, 1, 1);
+		insert into user_listing_role (user_listing_role_id, user_id, listing_id, role_id, application_id) values (nextval('seq_user_listing_role'), 1, 0, 100, 1);
+		
+		<!-- Demo Owner -->
+		insert into user_account
+		(user_id, email, password, firstname, lastname, enabled, status_id, failed_logins, locked_out, ignore_password_rules, preferred_locale, telephone, enable_promotional_email, enable_expiration_email, enable_enquiry_email, is_agent)
+		values
+		(nextval('seq_user_account'), 'demo@buybyebiz.com', '5258045e75bb6bacfa9e9a27027de82c2afa637358f2c8a42159a6e52e9a73c6', 'Horace', 'Mayerthorpe', true, 0, 0, false, true, 'en_US', '(888)966-0886', true, true, true, false);
+		
+		insert into user_agreement 
+		(user_agreement_id, user_id, application_id, listing_id, user_agreement_type_id, version, agreement_date) 
+		values 
+		(nextval('seq_user_agreement'), 2, 1, 0, 1, 1, (select current_timestamp));
+		insert into user_agreement 
+		(user_agreement_id, user_id, application_id, listing_id, user_agreement_type_id, version, agreement_date) 
+		values 
+		(nextval('seq_user_agreement'), 2, 1, 0, 2, 1, (select current_timestamp));
+		
+		insert into user_listing_role (user_listing_role_id, user_id, listing_id, role_id, application_id) values (nextval('seq_user_listing_role'), 2, 0, 1, 1);
+		insert into user_listing_role (user_listing_role_id, user_id, listing_id, role_id, application_id) values (nextval('seq_user_listing_role'), 2, 0, 10, 1);
+		insert into user_listing_role (user_listing_role_id, user_id, listing_id, role_id, application_id) values (nextval('seq_user_listing_role'), 2, 1, 20, 1);
+		
+		<!-- Demo Listing -->
+		insert into address 
+		(address_id, type_id, city, province, country)  
+		values
+		(nextval('seq_address'), 2, 'Ottawa', 'ON', 'CA');
+		
+		insert into business_details 
+		(details_id, website_url, facebook_url, sales_rev_min, sales_rev_max, cash_flow, inventory_total, property_type_id, chattel_total, selling_reason, hours_operation, year_established, number_employees, frontage, square_footage, acreage, support, owner_financing) 
+		values 
+		(nextval('seq_business_details'), 'https://buybyebiz.com', 'http://www.facebook.com', 225000, 235000, 35000, 18000, 1, 25000, 'Retirement', 'Monday - Friday from 8:00 AM until 5:00 PM, Saturday from 10:00 AM until 3:00 PM', '1987', '2 full-time, 2 part-time', '150 ft by 200 ft', 'Main: 5000 sq ft, Storage Shed: 2000 sq ft', '3 acres', 'Yes, first year of operation', 'TBD');
+		
+		insert into listing
+		(listing_id, application_id, user_id, category_id, sub_category_id, title, description, listing_uri, price, currency_type_id, address_id, details_id, enabled, status_id, include_contact_name, include_contact_telephone) 
+		values 
+		(nextval('seq_listing'), 1, 2, 1, 3, '**Demo - Stonepipe Wells General Store', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus iaculis consequat scelerisque. Quisque vitae feugiat tortor, non pulvinar tellus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id massa urna. Integer eros metus, consectetur a fermentum et, ullamcorper a nisi. Donec dapibus arcu metus, in fringilla nulla facilisis id. Duis at lobortis sapien. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce et consequat justo. Aenean leo purus, cursus id pellentesque nec, semper ac massa. Nunc sodales vel lectus aliquet finibus. Duis mattis condimentum neque, nec maximus ligula luctus eget. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec imperdiet est ut dignissim suscipit. Pellentesque ultricies rutrum mauris, at suscipit metus pellentesque vel. Mauris mollis, mauris nec dapibus consectetur, metus quam fermentum magna, eget ultricies metus nibh ac risus. Fusce mi lorem, aliquet et aliquam et, dictum at enim. Sed bibendum orci sapien, ac eleifend ex sodales vitae. Nulla facilisi. Aenean non maximus purus. Maecenas laoreet, sapien sit amet pellentesque posuere, odio ipsum finibus felis, id tincidunt urna urna id erat. Nam neque urna, ornare ut lorem a, finibus placerat velit.', 'Demo-Stonepipe-Wells-General-Store-For-Sale', 665000, 10, 1, 1, true, 1, true, true);
+		
+		insert into photo 
+		(photo_id, listing_id, file_name, photo_type_id, caption, status_id, photo_size, height, width) 
+		values 
+		(nextval('seq_photo'), 1, 'general-store.jpg', 3, 'Store front', 3, 136346, 400, 960);
+		
+		insert into photo 
+		(photo_id, listing_id, file_name, photo_type_id, caption, status_id, photo_size, height, width) 
+		values 
+		(nextval('seq_photo'), 1, 'profile.jpg', 1, '', 3, 39335, 400, 400);
+		
+		insert into photo 
+		(photo_id, listing_id, file_name, photo_type_id, caption, status_id, photo_size, height, width) 
+		values 
+		(nextval('seq_photo'), 1, 'magazine-rack.jpg', 2, 'Magazine rack', 3, 330253, 800, 800);
+		
+		insert into photo 
+		(photo_id, listing_id, file_name, photo_type_id, caption, status_id, photo_size, height, width) 
+		values 
+		(nextval('seq_photo'), 1, 'produce.jpg', 2, 'Produce aisle', 3, 320797, 800, 800);
+		
+		insert into photo 
+		(photo_id, listing_id, file_name, photo_type_id, caption, status_id, photo_size, height, width) 
+		values 
+		(nextval('seq_photo'), 1, 'coffee-bar.jpg', 2, 'Coffee counter with baking', 3, 285468, 800, 799);
+		
+		insert into photo 
+		(photo_id, listing_id, file_name, photo_type_id, caption, status_id, photo_size, height, width) 
+		values 
+		(nextval('seq_photo'), 1, 'baked-goods.jpg', 2, 'Fresh baked goods', 3, 253292, 800, 800);
+		
+		<!-- Listing Categories/Sub-Categories -->
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'ACCOMMODATION', '80.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ACCOMMODATION'), 'BED AND BREAKFAST', '80.1.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ACCOMMODATION'), 'CAMPGROUND/RV PARK', '80.1.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ACCOMMODATION'), 'HOTEL', '80.1.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ACCOMMODATION'), 'MOBILE HOME PARK', '80.1.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ACCOMMODATION'), 'MOTEL', '80.1.sub.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ACCOMMODATION'), 'RESORT', '80.1.sub.category.6');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ACCOMMODATION'), 'OTHER', '80.1.sub.category.7');
+		
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'ANIMAL AND PET CARE', '80.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ANIMAL AND PET CARE'), 'EQUESTRIAN CENTRE', '80.2.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ANIMAL AND PET CARE'), 'PET BOARDING', '80.2.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ANIMAL AND PET CARE'), 'PET GROOMER AND CARE', '80.2.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ANIMAL AND PET CARE'), 'PET STORE AND SUPPLIES', '80.2.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ANIMAL AND PET CARE'), 'PET TRAINING', '80.2.sub.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ANIMAL AND PET CARE'), 'VETERNARIAN', '80.2.sub.category.6');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'ANIMAL AND PET CARE'), 'OTHER', '80.2.sub.category.7');
+		
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'AUTOMOTIVE', '80.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'AUTOMOTIVE'), 'AUTOMOTIVE DETAILING', '80.3.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'AUTOMOTIVE'), 'AUTOMOTIVE GARAGE', '80.3.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'AUTOMOTIVE'), 'CAR WASH', '80.3.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'AUTOMOTIVE'), 'GAS STATION/SERVICE STATION', '80.3.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'AUTOMOTIVE'), 'TIRE SHOP', '80.3.sub.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'AUTOMOTIVE'), 'TOWING SERVICE', '80.3.sub.category.6');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'AUTOMOTIVE'), 'WINDSHIELD REPAIR', '80.3.sub.category.7');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'AUTOMOTIVE'), 'OTHER', '80.3.sub.category.8');
+		
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'COMMERCIAL REAL ESTATE', '80.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'COMMERCIAL REAL ESTATE'), 'APARTMENT BUILDING', '80.4.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'COMMERCIAL REAL ESTATE'), 'COMMERCIAL LOT', '80.4.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'COMMERCIAL REAL ESTATE'), 'VACANT BUILDING', '80.4.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'COMMERCIAL REAL ESTATE'), 'OTHER', '80.4.sub.category.4');
+		
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'DOMESTIC SERVICES', '80.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'DOMESTIC SERVICES'), 'APPLIANCE AND REPAIR SHOP', '80.5.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'DOMESTIC SERVICES'), 'CLEANING SERVICES', '80.5.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'DOMESTIC SERVICES'), 'DRY CLEANING AND LAUNDRY', '80.5.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'DOMESTIC SERVICES'), 'FUNERAL SERVICES', '80.5.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'DOMESTIC SERVICES'), 'PEST CONTROL', '80.5.sub.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'DOMESTIC SERVICES'), 'STORAGE FACILITY', '80.5.sub.category.6');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'DOMESTIC SERVICES'), 'OTHER', '80.5.sub.category.7');
+		
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'FARMS AND EQUIPMENT', '80.category.6');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FARMS AND EQUIPMENT'), 'FARMING AND AGRICULTURE', '80.6.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FARMS AND EQUIPMENT'), 'FARM EQUIPMENT', '80.6.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FARMS AND EQUIPMENT'), 'OTHER', '80.6.sub.category.3');
+		
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'FOOD AND BEVERAGE', '80.category.7');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'BAKERY', '80.7.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'BUTCHER/DELI', '80.7.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'BREWERY', '80.7.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'COFFEE SHOP', '80.7.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'CONVENIENCE STORE', '80.7.sub.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'GROWCERY STORE', '80.7.sub.category.6');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'HEALTH FOOD STORE', '80.7.sub.category.7');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'ICE CREAM AND YOGURT', '80.7.sub.category.8');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'JUICE BAR', '80.7.sub.category.9');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'PUB/BAR', '80.7.sub.category.10');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'RESTAURANT', '80.7.sub.category.11');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'SPECIALTY FOODS', '80.7.sub.category.12');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'FOOD AND BEVERAGE'), 'OTHER', '80.7.sub.category.13');
+		
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'HEALTH AND MEDICINE', '80.category.8');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'HEALTH AND MEDICINE'), 'CHIROPRACTIC CLINIC', '80.8.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'HEALTH AND MEDICINE'), 'DENTAL CLINIC', '80.8.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'HEALTH AND MEDICINE'), 'DIET AND NUTRITION', '80.8.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'HEALTH AND MEDICINE'), 'PHYSIOTHERAPY CLINIC', '80.8.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'HEALTH AND MEDICINE'), 'WEIGHT LOSS CLINIC', '80.8.sub.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'HEALTH AND MEDICINE'), 'OTHER', '80.8.sub.category.6');
+	
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'PERSONAL CARE', '80.category.9');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'PERSONAL CARE'), 'BARBER SHOP', '80.9.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'PERSONAL CARE'), 'BEAUTY SALON', '80.9.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'PERSONAL CARE'), 'DAY SPA', '80.9.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'PERSONAL CARE'), 'HAIR SALON', '80.9.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'PERSONAL CARE'), 'MASSAGE THERAPY', '80.9.sub.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'PERSONAL CARE'), 'NAIL SALON', '80.9.sub.category.6');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'PERSONAL CARE'), 'TANNING SALON', '80.9.sub.category.7');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'PERSONAL CARE'), 'TATOO SHOP', '80.9.sub.category.8');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'PERSONAL CARE'), 'OTHER', '80.9.sub.category.9');
+		
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'RETAIL BUSINESS', '80.category.10');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'ANTIQUES RETAILER', '80.10.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'ARTS AND CRAFTS RETAILER', '80.10.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'BOOKSTORE', '80.10.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'BRIDAL SHOP', '80.10.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'CARD AND GIFT SHOP', '80.10.sub.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'CLOTHING RETAILER', '80.10.sub.category.6');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'COMPUTER RETAILER', '80.10.sub.category.7');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'COSMETICS AND BEAUTY RETAILER', '80.10.sub.category.8');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'EYEWARE RETAILER', '80.10.sub.category.9');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'FABRIC RETAILER', '80.10.sub.category.10');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'FLORIST SHOP', '80.10.sub.category.11');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'FOOTWEAR RETAILER', '80.10.sub.category.12');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'FURNITURE STORE', '80.10.sub.category.13');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'HARDWARE STORE', '80.10.sub.category.14');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'HOBBY SHOP', '80.10.sub.category.15');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'JEWELRY RETAILER', '80.10.sub.category.16');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'SPORTING GOOD RETAILER', '80.10.sub.category.17');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'STATIONERY RETAILER', '80.10.sub.category.18');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'RETAIL BUSINESS'), 'OTHER', '80.10.sub.category.19');
+	
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'SPORTS AND RECREATION', '80.category.11');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'SPORTS AND RECREATION'), 'BICYCLE SHOP AND REPAIR', '80.11.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'SPORTS AND RECREATION'), 'GOLF COURSE/DRIVING RANGE', '80.11.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'SPORTS AND RECREATION'), 'GYM AND FITNESS CENTRE', '80.11.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'SPORTS AND RECREATION'), 'MARINA AND BOAT REPAIR', '80.11.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'SPORTS AND RECREATION'), 'MARTIAL ARTS STUDIO', '80.11.sub.category.5');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'SPORTS AND RECREATION'), 'YOGA STUDIO', '80.11.sub.category.6');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'SPORTS AND RECREATION'), 'OTHER', '80.11.sub.category.7');
+		
+		insert into category (category_id, type_id, name, i18n) values (nextval('seq_category'), 10, 'TRAVEL AND TRANSPORTATION', '80.category.12');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'TRAVEL AND TRANSPORTATION'), 'CAR RENTAL', '80.12.sub.category.1');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'TRAVEL AND TRANSPORTATION'), 'LIMOUSINE SERVICE', '80.12.sub.category.2');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'TRAVEL AND TRANSPORTATION'), 'TAXI SERVICE', '80.12.sub.category.3');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'TRAVEL AND TRANSPORTATION'), 'TRAVEL AND TOURISM', '80.12.sub.category.4');
+		insert into sub_category (sub_category_id, category_id, name, i18n) values (nextval('seq_sub_category'), (select category_id from category where name = 'TRAVEL AND TRANSPORTATION'), 'OTHER', '80.12.sub.category.5');
+	</sql>
+</changeSet>
+</databaseChangeLog>

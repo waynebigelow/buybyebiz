@@ -1,0 +1,50 @@
+<table width="800" border="0" cellpadding="0" cellspacing="0" style="border:1px solid #ddd;">
+	<tr>
+		<td align="center" style="padding-top:5px;background-color:#96a5b3">
+			<h2 style="color:#ffffff">
+				#set($params = ["$!{application.name}"])
+				#msgWithParams("501.msg.1", $params)
+			</h2>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" style="padding-top:20px">
+			<table width="600" border="0" cellpadding="0" cellspacing="0" align="center">
+				<tr>
+					<td>
+						<h4>
+							#set($params = ["$!{user.displayName}"])
+							#msgWithParams("500.txt.1", $params)
+						</h4>
+						
+						<p>
+							#msg("501.msg.4")
+							<br/><br/>
+							#set($params = ["<a target='_new' href='$authUrl'>","</a>"])
+							#msgWithParams("500.link.4", $params)
+						</p>
+						
+						<p>
+							#set($params = ["${password}"])
+							#msgWithParams("501.msg.5", $params)
+						</p>
+						
+						<p>
+							#msg("501.msg.6")
+						</p>
+						
+						<p>
+							#set($params = ["$!{application.supportPhone}","<a target='_new' href='mailto:$!{application.supportEmail}'>$!{application.supportEmail}</a>"])
+							#msgWithParams("500.msg.1",$params)
+						</p>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td height="100">&nbsp;</td>
+	</tr>
+	
+	#parse($templateFinder.resolve("velocity/footer.vm"))
+</table>

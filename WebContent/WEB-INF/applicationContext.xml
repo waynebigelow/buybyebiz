@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<context:component-scan base-package="ca.app"/>
+	<mvc:annotation-driven/>
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+
+	<!-- Service Layer -->
+	<bean id="securityService" class="ca.app.security.SecurityServiceImpl">
+		<property name="securityDAO" ref="myUserDetailService"/>
+	</bean>
+	<bean id="applicationService" class="ca.app.service.application.ApplicationServiceImpl" />
+	<bean id="userService" class="ca.app.service.user.UserServiceImpl" />
+	<bean id="listingService" class="ca.app.service.listing.ListingServiceImpl" />
+	<bean id="localeService" class="ca.app.service.i18n.LocaleServiceImpl" />
+	<bean id="photoService" class="ca.app.service.photo.PhotoServiceImpl"/>
+	<bean id="photoUploadService" class="ca.app.service.photo.PhotoUploadServiceImpl" />
+	<bean id="notificationLogService" class="ca.app.service.notificationLog.NotificationLogServiceImpl"/>
+	<bean id="activityLogService" class="ca.app.service.activityLog.ActivityLogServiceImpl"/>
+	<bean id="pageHitService" class="ca.app.service.usage.PageHitServiceImpl" />
+	<bean id="commonService" class="ca.app.service.common.CommonServiceImpl" />
+	<bean id="refererParsingService" class="ca.app.service.usage.RefererParsingServiceImpl" />
+	<bean id="userAgentParsingService" class="ca.app.service.usage.LocalUserAgentParsingServiceImpl" />
+	
+	<!-- Tiles Configuration -->
+	<bean id="viewResolver" class="ca.app.web.views.ViewResolver">
+		<property name="viewClass" value="ca.app.web.views.TilesView"/>
+	</bean>
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="useMutableTilesContainer" value="true"/>
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/definitions/version1.xml</value>
+			</list>
+		</property>
+		
+		<property name="preparerFactoryClass" value="org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory"/>
+	</bean>
+</beans>

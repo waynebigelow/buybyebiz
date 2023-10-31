@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+	
+	<bean id="sqsConnectorFactory" class="org.skyscreamer.nevado.jms.connector.amazonaws.AmazonAwsSQSConnectorFactory" />
+	
+	<bean id="connectionFactory" class="org.skyscreamer.nevado.jms.NevadoConnectionFactory">
+		<property name="sqsConnectorFactory" ref="sqsConnectorFactory" />
+		<property name="awsAccessKey" value="${aws.access.key}" />
+		<property name="awsSecretKey" value="${aws.secret.key}" />
+	</bean>
+	
+	<bean id="immediateMailQueue" class="org.skyscreamer.nevado.jms.destination.NevadoQueue">
+		<constructor-arg value="immediateMailQueueQA" />
+	</bean>
+	
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="defaultDestinationName" value="immediateMailQueue"/>
+		<property name="connectionFactory" ref="connectionFactory"/>
+	</bean>
+	
+	<!-- Publisher (pushes messages to the queue) -->
+	<bean id="immediateMailQueuePublisher" class="ca.app.queue.ImmediateMailQueuePublisher">
+		<property name="jmsTemplate" ref="jmsTemplate" />
+		<property name="queue" ref="immediateMailQueue" />
+	</bean>
+	
+	<!-- Listener (pops messages from the queue) -->
+	<bean id="immediateMailQueueListener" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory"/>
+		<property name="destination" ref="immediateMailQueue"/>
+		<property name="messageListener" ref="immediateMailQueueMDP" />
+	</bean>
+	
+	<!-- Consumer (handles popped messages) -->
+	<bean id="immediateMailQueueMDP" class="ca.app.queue.ImmediateMailQueueMDP">
+		<property name="mailSender" ref="mailSender" />
+		<property name="applicationService" ref="applicationService" />
+		<property name="listingService" ref="listingService" />
+		<property name="userService" ref="userService" />
+		<property name="notificationLogService" ref="notificationLogService"/>
+	</bean>
+</beans>

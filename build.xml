@@ -1,0 +1,103 @@
+<project name="BuyByeBiz" default="zip">
+	<!-- ============ Project Settings ====================================-->
+	<property environment="env" />
+	<property name="PROJECT_HOME" value="./" />
+	<property name="BUILD_DIR" value="${PROJECT_HOME}/target" />
+	<property name="JAVA_BUILD_DIR" value="${BUILD_DIR}/classes" />
+	<property name="CONTENT_DIR" value="${PROJECT_HOME}/WebContent" />
+	<property name="JAVA_SRC_DIR" value="${PROJECT_HOME}/src" />
+	<property name="LIB_DIR" value="${CONTENT_DIR}/WEB-INF/lib" />
+	<property name="TOMCAT_LIB" value="/Applications/apache-tomcat-8.0.30/lib"/>
+	<property name="DIST_HOME" value="/Users/waynebigelow/Documents/BuyByeBiz/dist/"/>
+	
+	<path id="class.path">
+		<fileset dir="${LIB_DIR}">
+			<include name="*.jar"/>
+		</fileset>
+		<fileset dir="${TOMCAT_LIB}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<!-- =========== Clean ====================================================== -->
+	<target name="clean">
+		<delete dir="${BUILD_DIR}" />
+	</target>
+	
+	<!-- =========== Init System ================================================= -->
+	<target name="init" depends="clean">
+		<tstamp>
+			<format property="now" pattern="MMM d yyyy hh:mm aa" />
+		</tstamp>
+		<!-- Create build dir -->
+		<mkdir dir="${BUILD_DIR}" />
+		<mkdir dir="${JAVA_BUILD_DIR}" />
+	</target>
+	
+	
+	<!-- =========== Compile Java Code =========================================== -->
+	<target name="compile" depends="init">
+		<echo>Compile</echo>
+		<javac debug="on" classpathref="class.path" debuglevel="lines,vars,source" optimize="on" destdir="${JAVA_BUILD_DIR}">
+			<src path="${JAVA_SRC_DIR}" />
+		</javac>
+		<copy todir="${JAVA_BUILD_DIR}">
+			<fileset dir="${JAVA_SRC_DIR}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		<jar destfile="${CONTENT_DIR}/WEB-INF/lib/buybyebiz-core.jar" basedir="${JAVA_BUILD_DIR}" includes="ca/app/**" excludes="**/*.java" />
+	</target>
+
+	<target name="war" depends="compile">
+		<!-- not a good idea in eclipse...-->
+		<delete dir="${CONTENT_DIR}/buybyemedia"/>
+		
+		<copy todir="${CONTENT_DIR}/WEB-INF/classes">
+			<fileset dir="${JAVA_SRC_DIR}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		
+		<war warfile="${BUILD_DIR}/BuyByeBiz.${build.number}.war" webxml="${CONTENT_DIR}/WEB-INF/web.xml">
+			<manifest>
+				<attribute name="Build Number" value="${build.number}" />
+				<attribute name="Built Date" value="${now}" />
+			</manifest>
+
+			<fileset dir="${CONTENT_DIR}">
+				<exclude name="**/*.class"/>
+				<exclude name="**/ca/**"/>
+			</fileset>
+		</war>
+		<copy file="${BUILD_DIR}/BuyByeBiz.${build.number}.war" tofile="${DIST_HOME}/${env.release.number}/BuyByeBiz.${build.number}.war"/>
+	</target>
+	
+	<target name="zip" depends="compile">
+		<!-- not a good idea in eclipse...-->
+		<delete dir="${CONTENT_DIR}/buybyemedia"/>
+		<copy todir="${CONTENT_DIR}/WEB-INF/classes">
+			<fileset dir="${JAVA_SRC_DIR}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		<war warfile="${BUILD_DIR}/BuyByeBiz.${build.number}.zip" webxml="${CONTENT_DIR}/WEB-INF/web.xml">
+			<manifest>
+				<attribute name="Build-Number" value="${build.number}" />
+				<attribute name="Build-Date" value="${now}" />
+			</manifest>
+
+			<fileset dir="${CONTENT_DIR}">
+				<exclude name="**/buybyemedia/*"/>
+				<exclude name="**/log4j.properties"/>
+				<exclude name="**/mail.properties"/>
+				<exclude name="**/jdbc.properties"/>
+				<exclude name="**/jdbcAws.properties"/>
+				<exclude name="**/application.properties"/>
+				<exclude name="**/*.class"/>
+				<exclude name="**/ca/**"/>
+			</fileset>
+		</war>
+		<copy file="${BUILD_DIR}/BuyByeBiz.${build.number}.zip" tofile="${DIST_HOME}/${env.release.number}/BuyByeBiz.${build.number}.zip"/>
+	</target>
+</project>

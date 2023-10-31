@@ -1,0 +1,21 @@
+#macro(msg $code)
+$resources.getMessage($code, null, $locale)
+#end
+
+#macro(msgWithParams $code $params)
+$resources.getMessage($code, $params.toArray(), $locale)
+#end
+
+#macro(property $key)
+#if ($properties.containsKey($key))
+$properties.remove($key)
+#end
+#end
+
+#macro(formatMoney $price)
+$CurrencyFormatUtil.formatMoney($price)
+#end
+
+#macro(formatMoneyWithCurrency $price)
+$CurrencyFormatUtil.formatMoneyWithCurrency($price, $locale, $commerceCurrency)
+#end

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	
+	<changeSet id="BBB-003: leads changes" author="wayne">
+		<sql>
+			alter table listing_lead add is_promo_sent boolean;
+			alter table listing_lead add website varchar(256);
+			update listing_lead set is_promo_sent = false;
+		</sql>
+	</changeSet>
+	
+	<changeSet id="BBB-003: page hit raw ua size change" author="wayne">
+		<sql>
+			alter table page_hit alter column raw_user_agent type varchar(1000);
+		</sql>
+	</changeSet>
+	
+	<changeSet id="BBB-003: new fields for business details" author="wayne">
+		<sql>
+			alter table business_details add financial_other varchar(1000);
+			alter table business_details add property_other varchar(1000);
+			alter table business_details add operation_other varchar(1000);
+			alter table business_details add owners_residence varchar(1000);
+			alter table business_details add property_tax varchar(256);
+			alter table business_details add multi_media_link varchar(256);
+			alter table business_details add agent_listing_link varchar(256);
+		</sql>
+	</changeSet>
+</databaseChangeLog>
